@@ -37,7 +37,6 @@ export async function saveJob(token, { alreadySaved }, saveData) {
     if (!supabase) throw new Error("Supabase client initialization failed");
 
     if (alreadySaved) {
-      console.log("savedData --> ", saveData);
       const { data, error: deleteError } = await supabase
         .from("saved_jobs")
         .delete()

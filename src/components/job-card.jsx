@@ -29,7 +29,7 @@ const JobCard = ({
 
   const { user } = useUser();
 
-  const  handleSavedJob = async () => {
+  const handleSavedJob = async () => {
     await fnSavedJob({
       user_id: user.id,
       job_id: job.id,
@@ -42,7 +42,7 @@ const JobCard = ({
   }, [savedjob]);
 
   return (
-    <Card>
+    <Card className="flex flex-col">
       <CardHeader>
         <CardTitle className="flex justify-between font-bold">
           {job.title}
