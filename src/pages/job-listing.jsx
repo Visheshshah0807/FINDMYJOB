@@ -1,5 +1,6 @@
 import { getJobs } from "@/api/apiJobs";
 import JobCard from "@/components/job-card";
+import useFetch from "@/hooks/use-fetch";
 import { useSession, useUser } from "@clerk/clerk-react";
 import { useState, useEffect } from "react";
 import React from "react";
@@ -7,42 +8,27 @@ import { BarLoader } from "react-spinners";
 
 const Joblisting = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [company_id, setCompanyId] = useState("");
   const [location, setLocation] = useState("");
-  const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [company_id, setCompanyId] = useState("");
 
   const { isLoaded } = useUser();
-  const { session } = useSession();
 
-  const fetchJobs = async () => {
-    if (!session) return;
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const supabaseAccessToken = await session.getToken({
-        template: "supabase",
-      });
-
-      const data = await getJobs(supabaseAccessToken, {
-        location,
-        company_id,
-        searchQuery,
-      });
-      setJobs(data || []);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch jobs.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    fn: fnJobs,
+    data: jobs,
+    loading,
+    error,
+  } = useFetch(getJobs, {
+    location,
+    company_id,
+    searchQuery,
+  });
 
   useEffect(() => {
-    if (isLoaded) fetchJobs();
-  }, [session, isLoaded, location, company_id, searchQuery]); // Re-fetch jobs when filters change
+    if (isLoaded) {
+      fnJobs();
+    }
+  }, [isLoaded, location, company_id, searchQuery]);
 
   if (!isLoaded) {
     return <BarLoader className="mb-4" width={"100%"} color="#ffffff" />;
@@ -54,16 +40,19 @@ const Joblisting = () => {
         Latest Jobs
       </h1>
 
-      {/* add filters init */}
-
+      {/* Filters Section */}
       {loading && <BarLoader className="mb-4" width={"100%"} color="#ffffff" />}
 
-      {loading === false && (
+      {!loading && (
         <div className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {jobs?.length ? (
-            jobs.map((job) => {
-              return <JobCard key={job.id} job={job} />;
-            })
+            jobs.map((job) => (
+              <JobCard
+                key={job.id}
+                job={job}
+                savedInit={job?.saved?.length > 0}
+              />
+            ))
           ) : (
             <div>No jobs Found</div>
           )}
@@ -74,3 +63,4 @@ const Joblisting = () => {
 };
 
 export default Joblisting;
+

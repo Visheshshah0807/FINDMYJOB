@@ -1,33 +1,33 @@
-// import { useState } from "react";
+import { useSession } from "@clerk/clerk-react";
+import { useState } from "react";
 
-// const useFetch = (cb, options = {}) => {
-//   const [data, setData] = useState(undefined);
-//   const [loading, setLoading] = useState(false); // Initialize as false
-//   const [error, setError] = useState(null);
+const useFetch = (cb, options = {}) => {
+  const [data, setData] = useState(undefined);
+  const [loading, setLoading] = useState(null);
+  const [error, setError] = useState(null);
 
-//   const fetchFn = async (session, ...args) => {
-//     setLoading(true);
-//     setError(null);
+  const { session } = useSession();
 
-//     try {
-//       if (!session) {
-//         throw new Error("Session is not available.");
-//       }
+  const fn = async (...args) => {
+    setLoading(true);
+    setError(null);
 
-//       const supabaseAccessToken = await session.getToken({
-//         template: "supabase",
-//       });
+    try {
+      const supabaseAccessToken = await session.getToken({
+        template: "supabase",
+      });
 
-//       const response = await cb(supabaseAccessToken, options, ...args);
-//       setData(response);
-//     } catch (err) {
-//       setError(err instanceof Error ? err.message : "An unknown error occurred.");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
+      const response = await cb(supabaseAccessToken, options, ...args);
+      setData(response);
+      setError(error);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-//   return { fetchFn, data, loading, error };
-// };
+  return { fn, data, loading, error };
+};
 
-// export default useFetch;
+export default useFetch;
