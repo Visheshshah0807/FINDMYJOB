@@ -53,7 +53,7 @@ const Landingpage = () => {
             delay: 2000,
           }),
         ]}
-        className="w-full mt-14 sm:mt-36"
+        className="w-full mt-14 sm:mt-36 -z-10"
       >
         <CarouselContent className="flex gap-5 sm:gap-20 items-center">
           {companies.map(({ name, id, path }) => (
