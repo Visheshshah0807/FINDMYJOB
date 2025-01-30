@@ -10,9 +10,32 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { Label } from "./ui/label";
+import { z } from "zod";
+
+const schema = z.object({
+  experience: z
+    .number()
+    .min(0, { message: "Experience must be at least 0" })
+    .int(),
+  skills: z.string().min(1, { message: "Skills are required" }),
+  education: z.enum(["Intermediate", "Graduate", "Post Graduate"], {
+    message: "Education is required",
+  }),
+  resume: z
+    .any()
+    .refine(
+      (file) =>
+        file[0] &&
+        (file[0].type === "application/pdf" ||
+          file[0].type === "application/msword"),
+      { message: "Only PDF or Word documents are allowed" }
+    ),
+});
 
 const ApplyJobDrawer = ({ user, job, applied = false, fetchJob }) => {
-  console.log("RENDERING DRAWER");
   return (
     <Drawer open={applied ? false : undefined}>
       <DrawerTrigger asChild>
@@ -31,12 +54,46 @@ const ApplyJobDrawer = ({ user, job, applied = false, fetchJob }) => {
           </DrawerTitle>
           <DrawerDescription>Please fill the form below</DrawerDescription>
         </DrawerHeader>
+
+        <form className="flex flex-col gap-4 pb-0 p-4">
+          <Input
+            type="text"
+            placeholder="Years of Experience"
+            className=" flex-1"
+          />
+          <Input
+            type="text"
+            placeholder="Skills (Comma Separated)"
+            className=" flex-1"
+          />
+          <RadioGroup defaultValue="option-one">
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="Intermediate" id="intermediate" />
+              <Label htmlFor="intermediate">Intermediate</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="Graduate" id="graduate" />
+              <Label htmlFor="graduate">Graduate</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="Post Graduate" id="post-graduate" />
+              <Label htmlFor="post-graduate">Post Graduate</Label>
+            </div>
+          </RadioGroup>
+
+          <Input
+            type="file"
+            accept=".pdf, .doc, .docx"
+            className="flex-1 file:text-gray-500"
+          />
+          <Button type="submit" variant="blue" size="lg">
+            Apply
+          </Button>
+        </form>
+
         <DrawerFooter>
-          <Button>Submit</Button>
-          <DrawerClose>
-            <Button variant="outline" className="w-full">
-              Cancel
-            </Button>
+          <DrawerClose asChild>
+            <Button variant="outline">Cancel</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
