@@ -63,7 +63,6 @@ export async function saveJob(token, { alreadySaved }, saveData) {
     console.error("Error in saveJob function:", error);
     return null;
   }
-  return data;
 }
 
 // Jobs api are here --------------------------------------------------------//
@@ -89,7 +88,6 @@ export async function getSingleJob(token, { job_id }) {
     console.error("Error in Fetching Jobs:", error);
     return null;
   }
-  return data;
 }
 
 // updating hiring status ------------------------------------------------------------------//
@@ -114,5 +112,27 @@ export async function updateHiringStatus(token, { job_id }, isOpen) {
     console.error("Error in Updating Jobs:", error);
     return null;
   }
-  return data;
+}
+
+// creating the New Jobs ---------------------------------------------------------------------------//
+
+export async function addNewJob(token, _, jobData) {
+  try {
+    const supabase = await supabaseClient(token);
+    if (!supabase) throw new Error("Supabase client initialization failed");
+
+    const { data, error } = await supabase
+      .from("jobs")
+      .insert([jobData])
+      .select();
+
+    if (error) {
+      console.error("Error in Updating Jobs", error);
+      return null;
+    }
+    return data;
+  } catch (error) {
+    console.error("Error in Updating Jobs:", error);
+    return null;
+  }
 }
