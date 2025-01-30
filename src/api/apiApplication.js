@@ -9,7 +9,7 @@ export async function applyToJob(token, _, jobData) {
     const filename = `resume-${random}-${jobData.candidate_id}`;
 
     const { error: storageError } = await supabase.storage
-      .from("resumes")
+      .from("resume")
       .upload(filename, jobData.resume);
 
     if (storageError) {
@@ -17,7 +17,7 @@ export async function applyToJob(token, _, jobData) {
       return null;
     }
 
-    const resume = `${supabaseUrl}/storage/v1/object/public/resumes/${filename}`;
+    const resume = `${supabaseUrl}/storage/v1/object/public/resume/${filename}`;
 
     const { data, error } = await supabase
       .from("applications")
@@ -36,6 +36,30 @@ export async function applyToJob(token, _, jobData) {
     return data;
   } catch (error) {
     console.error("Error in Submiting Applications:", error);
+    return null;
+  }
+}
+
+// updateding the job applications -----------------------------------------------------//
+
+export async function updateApplicationStatus(token, { job_id }, status) {
+  try {
+    const supabase = await supabaseClient(token);
+    if (!supabase) throw new Error("Supabase client initialization failed");
+
+    const { data, error } = await supabase
+      .from("applications")
+      .update({ status })
+      .eq("job_id", job_id)
+      .select();
+
+    if (error || data.length === 0) {
+      console.error("Error Updating Application Status:", error);
+      return null;
+    }
+    return data;
+  } catch (error) {
+    console.error("Error Updating Application Status:", error);
     return null;
   }
 }

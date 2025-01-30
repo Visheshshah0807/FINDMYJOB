@@ -1,4 +1,5 @@
 import { getSingleJob, updateHiringStatus } from "@/api/apiJobs";
+import ApplicationCard from "@/components/application-card";
 import ApplyJobDrawer from "@/components/apply-job";
 import {
   Select,
@@ -116,13 +117,24 @@ const Job = () => {
       />
 
       {/* render applications */}
-      {job?.recruiter_id === user?.id && (
+      {job?.recruiter_id !== user?.id && (
         <ApplyJobDrawer
           job={job}
           user={user}
           fetchJob={fnJob}
           applied={job?.applications?.find((ap) => ap.candidate_id === user.id)}
         />
+      )}
+
+      {job?.applications?.length > 0 && job?.recruiter_id === user?.id && (
+        <div className="flex flex-col gap-2">
+          <h2 className="text-2xl sm:text-3xl font-bold">Applications</h2>
+          {job?.applications.map((application) => {
+            return (
+              <ApplicationCard key={application.id} application={application} />
+            );
+          })}
+        </div>
       )}
     </div>
   );
