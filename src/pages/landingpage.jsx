@@ -19,8 +19,7 @@ const Landingpage = () => {
           Find. Apply. Achieve.
         </h1>
         <p className="text-white text-sm sm:text-lg lg:text-xl sm:mt-4">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Labore,
-          repudiandae.
+          Find the Right Job. Apply with Confidence. Achieve More!
         </p>
       </section>
 
