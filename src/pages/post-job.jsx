@@ -22,6 +22,7 @@ import { BarLoader } from "react-spinners";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { addNewJob } from "@/api/apiJobs";
+import AddCompanyDrawer from "@/components/add-company-drawer";
 
 const schema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
@@ -156,7 +157,7 @@ const Postjob = () => {
             )}
           />
 
-          {/* Add company Drawer */}
+          <AddCompanyDrawer fetchCompanies={fnCompanies} />
         </div>
         {errors.location && (
           <p className="text-red-500">{errors.location.message}</p>
