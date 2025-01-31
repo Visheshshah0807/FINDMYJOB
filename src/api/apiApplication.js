@@ -63,3 +63,26 @@ export async function updateApplicationStatus(token, { job_id }, status) {
     return null;
   }
 }
+
+// creating get application ------------------------------------------------------//
+
+export async function getApplications(token, { user_id }) {
+  try {
+    const supabase = await supabaseClient(token);
+    if (!supabase) throw new Error("Supabase client initialization failed");
+
+    const { data, error } = await supabase
+      .from("applications")
+      .select("*, job:jobs(title,company:companies(name))")
+      .eq("candidate_id", user_id);
+
+    if (error) {
+      console.error("Error Fetching Application", error);
+      return null;
+    }
+    return data;
+  } catch (error) {
+    console.error("Error Fetching Application:", error);
+    return null;
+  }
+}

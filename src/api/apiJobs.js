@@ -136,3 +136,72 @@ export async function addNewJob(token, _, jobData) {
     return null;
   }
 }
+
+// creating a saved jobs for candidate --------------------------------------------------------------------------------//
+
+export async function getSavedJobs(token) {
+  try {
+    const supabase = await supabaseClient(token);
+    if (!supabase) throw new Error("Supabase client initialization failed");
+
+    const { data, error } = await supabase
+      .from("saved_jobs")
+      .select("*, job:jobs(*,company:companies(name, logo_URL))");
+
+    if (error) {
+      console.error("Error in Fetching Jobs", error);
+      return null;
+    }
+    return data;
+  } catch (error) {
+    console.error("Error in Fetching Jobs:", error);
+    return null;
+  }
+}
+
+// createing get my jobs for recruiter ------------------------------------------------------------------------------//
+
+export async function getMyJobs(token, { recruiter_id }) {
+  try {
+    const supabase = await supabaseClient(token);
+    if (!supabase) throw new Error("Supabase client initialization failed");
+
+    const { data, error } = await supabase
+      .from("jobs")
+      .select("*, company:companies(name, logo_URL)")
+      .eq("recruiter_id", recruiter_id);
+
+    if (error) {
+      console.error("Error Fetching Jobs", error);
+      return null;
+    }
+    return data;
+  } catch (error) {
+    console.error("Error Fetching Jobs:", error);
+    return null;
+  }
+}
+
+// createing the deleteing fucntion to delete the job from the recruiter only -----------------------------------//
+
+export async function deleteJob(token, { job_id }) {
+  try {
+    const supabase = await supabaseClient(token);
+    if (!supabase) throw new Error("Supabase client initialization failed");
+
+    const { data, error } = await supabase
+      .from("jobs")
+      .delete()
+      .eq("id", job_id)
+      .select();
+
+    if (error) {
+      console.error("Error Deleting Jobs", error);
+      return null;
+    }
+    return data;
+  } catch (error) {
+    console.error("Error Deleting Jobs:", error);
+    return null;
+  }
+}
