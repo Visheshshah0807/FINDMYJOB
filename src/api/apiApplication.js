@@ -41,8 +41,13 @@ export async function applyToJob(token, _, jobData) {
 }
 
 // updateding the job applications -----------------------------------------------------//
+export async function updateApplicationStatus(
+  token,
+  { job_id, applicant_email },
+  status
+) {
+  console.log("Changing");
 
-export async function updateApplicationStatus(token, { job_id }, status) {
   try {
     const supabase = await supabaseClient(token);
     if (!supabase) throw new Error("Supabase client initialization failed");
@@ -57,6 +62,23 @@ export async function updateApplicationStatus(token, { job_id }, status) {
       console.error("Error Updating Application Status:", error);
       return null;
     }
+
+    // ✅ SEND EMAIL AFTER SUCCESSFUL STATUS UPDATE
+    await fetch(
+      "https://ise8t78hha.execute-api.us-east-1.amazonaws.com/prod/send-email",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: "pranjaloff13@gmail.com", // ⬅️ get this from your application data
+          subject: "Application Status Updated",
+          message: `Your application status has been updated to: ${status}.`,
+        }),
+      }
+    );
+
     return data;
   } catch (error) {
     console.error("Error Updating Application Status:", error);

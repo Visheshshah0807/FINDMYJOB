@@ -93,6 +93,7 @@ export async function getSingleJob(token, { job_id }) {
 // updating hiring status ------------------------------------------------------------------//
 
 export async function updateHiringStatus(token, { job_id }, isOpen) {
+  console.log("Changeing");
   try {
     const supabase = await supabaseClient(token);
     if (!supabase) throw new Error("Supabase client initialization failed");
