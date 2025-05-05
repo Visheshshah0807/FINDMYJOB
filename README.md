@@ -1,6 +1,12 @@
 # FindMyJob
 
-FindMyJob is a responsive job portal web application that helps users search and apply for jobs easily while enabling recruiters to post job listings and manage applicants. It is designed to be user-friendly and modern, offering seamless navigation and robust features for job seekers and employers.
+**FindMyJob** is a responsive job portal web application that helps users search and apply for jobs easily while enabling recruiters to post job listings and manage applicants. It is designed to be user-friendly and modern, offering seamless navigation and robust features for job seekers and employers.
+
+🔗 **Live Demo:** https://findmyjobs.vercel.app/
+
+🔗 **AWS Cloud Live Demo:** https://aws.d3gjz39ttaxqte.amplifyapp.com/
+
+---
 
 ## 🛠️ Tech Stack
 
@@ -9,18 +15,20 @@ FindMyJob is a responsive job portal web application that helps users search and
 - **Database:** Supabase
 - **Other Tools:** Redux Toolkit, Axios, JWT Authentication
 
+---
+
 ## ☁️ AWS Cloud Integration
 
-FindMyJob uses several AWS services to ensure high availability, scalability, and ease of deployment:
+FindMyJob leverages several AWS services for cloud-native infrastructure:
 
-- **AWS Amplify:** For hosting and CI/CD of the frontend React app
-- **AWS Lambda:** Serverless compute for handling backend logic
-- **API Gateway:** To expose RESTful APIs that connect the frontend with Lambda functions
-- **Amazon SES (Simple Email Service):** For sending transactional emails (like application confirmations)
-- **IAM (Identity and Access Management):** For managing Lambda execution permissions securely
-- **Amazon CloudWatch:** For real-time monitoring, logging, and debugging of backend Lambda functions
+- **AWS Amplify:** For frontend hosting and CI/CD
+- **AWS Lambda:** Serverless backend compute
+- **API Gateway:** RESTful API routing
+- **Amazon SES:** Email notifications (e.g., job application confirmations)
+- **IAM:** Secure permissions for Lambda
+- **Amazon CloudWatch:** Monitoring and logging Lambda activity
 
-These integrations help maintain a fully cloud-native, scalable, and secure infrastructure.
+---
 
 ## ✨ Features
 
@@ -37,3 +45,4 @@ These integrations help maintain a fully cloud-native, scalable, and secure infr
 - Manage posted jobs (edit/delete)
 - View applicants and their details
 
+---
